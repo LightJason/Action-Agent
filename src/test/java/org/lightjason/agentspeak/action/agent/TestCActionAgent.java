@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.agentspeak.IBaseTest;
+import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
 import org.lightjason.agentspeak.language.ILiteral;
@@ -297,6 +298,40 @@ public final class TestCActionAgent extends IBaseTest
                     .map( i -> i.fqnfunctor().toString() )
                     .allMatch( l_list::contains )
         );
+    }
+
+    /**
+     * test name and arguments
+     */
+    @Test
+    public void namearguments()
+    {
+        Assert.assertEquals( CPath.of( "agent/planstatistic" ), new org.lightjason.agentspeak.action.agent.CPlanStatistic().name() );
+        Assert.assertEquals( 1, new org.lightjason.agentspeak.action.agent.CPlanStatistic().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/belieflist" ), new CBeliefList().name() );
+        Assert.assertEquals( 0, new CBeliefList().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/clearbeliefbase" ), new CClearBeliefbase().name() );
+        Assert.assertEquals( 0, new CClearBeliefbase().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/cycletime" ), new CCycleTime().name() );
+        Assert.assertEquals( 0, new CClearBeliefbase().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/fuzzymembership" ), new CFuzzyMembership().name() );
+        Assert.assertEquals( 0, new CFuzzyMembership().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/getplan" ), new CGetPlan().name() );
+        Assert.assertEquals( 1, new CGetPlan().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/planlist" ), new CPlanList().name() );
+        Assert.assertEquals( 0, new CPlanList().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/removeplan" ), new CRemovePlan().name() );
+        Assert.assertEquals( 1, new CRemovePlan().minimalArgumentNumber() );
+
+        Assert.assertEquals( CPath.of( "agent/sleep" ), new CSleep().name() );
+        Assert.assertEquals( 0, new CSleep().minimalArgumentNumber() );
     }
 
 
