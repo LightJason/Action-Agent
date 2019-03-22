@@ -50,6 +50,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -298,10 +299,10 @@ public final class TestCActionAgent extends IBaseTest
     }
 
     /**
-     * test belieflist
+     * test belieflist all
      */
     @Test
-    public void belieflist()
+    public void belieflistall()
     {
         final List<ITerm> l_return = new ArrayList<>();
         final Set<String> l_list = IntStream.range( 0, 100 )
@@ -326,6 +327,42 @@ public final class TestCActionAgent extends IBaseTest
                     .stream()
                     .map( i -> i.fqnfunctor().toString() )
                     .allMatch( l_list::contains )
+        );
+    }
+
+    /**
+     * test belieflist single element
+     */
+    @Test
+    public void belieflistsingle()
+    {
+        final String l_names = "foo";
+
+        m_context.agent().beliefbase().add(
+            CLiteral.of( l_names ),
+            CLiteral.of( l_names, CRawTerm.of( 1 ) ),
+            CLiteral.of( l_names, CRawTerm.of( 2 ) ),
+            CLiteral.of( "y", CRawTerm.of( 1 ) ),
+            CLiteral.of( "y", CRawTerm.of( 2 ) )
+        );
+
+        final List<ITerm> l_return = new ArrayList<>();
+
+        new CBeliefList().execute(
+            false, m_context,
+            Stream.of( l_names ).map( CRawTerm::of ).collect( Collectors.toList() ),
+            l_return
+        );
+
+        Assert.assertEquals( 1, l_return.size() );
+        Assert.assertEquals( 3, l_return.get( 0 ).<Collection<?>>raw().size() );
+
+        Assert.assertTrue(
+            Stream.of(
+                CLiteral.of( l_names ),
+                CLiteral.of( l_names, CRawTerm.of( 1 ) ),
+                CLiteral.of( l_names, CRawTerm.of( 2 ) )
+            ).allMatch( i -> l_return.get( 0 ).<Collection<?>>raw().contains( i ) )
         );
     }
 
