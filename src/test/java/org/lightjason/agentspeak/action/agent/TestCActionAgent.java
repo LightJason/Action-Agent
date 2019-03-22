@@ -70,8 +70,6 @@ public final class TestCActionAgent extends IBaseTest
      */
     private IContext m_context;
 
-
-
     static
     {
         LogManager.getLogManager().reset();
@@ -408,6 +406,34 @@ public final class TestCActionAgent extends IBaseTest
                 Stream.of( 3, "hello" ).map( CRawTerm::of ).collect( Collectors.toList() ),
                 Collections.emptyList()
             ).collect( Collectors.toList() ).isEmpty()
+        );
+    }
+
+    /**
+     * plan statistic
+     */
+    @Test
+    public void planstatistic()
+    {
+        final IPlan l_plan = new CEmptyPlan( ITrigger.EType.ADDGOAL.builddefault( CLiteral.of( "testgetplan" ) ) );
+        m_context.agent().plans().put( l_plan.trigger(), CPlanStatistic.of( l_plan ) );
+
+        final List<ITerm> l_return = new ArrayList<>();
+
+        Assert.assertTrue(
+            execute(
+                new org.lightjason.agentspeak.action.agent.CPlanStatistic(),
+                false,
+                Stream.of( l_plan ).map( CRawTerm::of ).collect( Collectors.toList() ),
+                l_return,
+                m_context
+            )
+        );
+
+        Assert.assertEquals( 3, l_return.size() );
+        Assert.assertArrayEquals(
+            Stream.of( 0D, 0D, 0D ).toArray(),
+            l_return.stream().map( i -> i.raw() ).toArray()
         );
     }
 
