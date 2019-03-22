@@ -301,6 +301,36 @@ public final class TestCActionAgent extends IBaseTest
     }
 
     /**
+     * test sleep unlimited
+     */
+    @Test
+    public void sleepunlimited()
+    {
+        new CSleep().execute(
+            false, m_context,
+            Collections.emptyList(),
+            Collections.emptyList()
+        );
+
+        Assert.assertTrue( m_context.agent().sleeping() );
+    }
+
+    /**
+     * test sleep single
+     */
+    @Test
+    public void sleepone()
+    {
+        new CSleep().execute(
+            false, m_context,
+            Stream.of( 1 ).map( CRawTerm::of ).collect( Collectors.toList() ),
+            Collections.emptyList()
+        );
+
+        Assert.assertTrue( m_context.agent().sleeping() );
+    }
+
+    /**
      * test name and arguments
      */
     @Test
