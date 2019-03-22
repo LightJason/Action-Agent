@@ -28,6 +28,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lightjason.agentspeak.IBaseTest;
+import org.lightjason.agentspeak.beliefbase.CBeliefbase;
+import org.lightjason.agentspeak.beliefbase.storage.CMultiStorage;
 import org.lightjason.agentspeak.common.CPath;
 import org.lightjason.agentspeak.language.CLiteral;
 import org.lightjason.agentspeak.language.CRawTerm;
@@ -198,10 +200,10 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertEquals( l_return.size(), 1 );
+        Assert.assertEquals( 1, l_return.size() );
         Assert.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
-        Assert.assertEquals( l_return.get( 0 ).<List<?>>raw().size(), 1 );
-        Assert.assertArrayEquals( l_return.get( 0 ).<List<?>>raw().toArray(), Stream.of( l_plan ).toArray() );
+        Assert.assertEquals( 1, l_return.get( 0 ).<List<?>>raw().size() );
+        Assert.assertArrayEquals( Stream.of( l_plan ).toArray(), l_return.get( 0 ).<List<?>>raw().toArray() );
     }
 
 
@@ -244,18 +246,17 @@ public final class TestCActionAgent extends IBaseTest
 
 
     /**
-     * test clear-beliefbase
+     * test clear-beliefbase empty call
      */
     @Test
-    public void clearbeliefbase()
+    public void clearbeliefbaseempty()
     {
         IntStream.range( 0, 100 )
                  .mapToObj( i -> RandomStringUtils.random( 12, "abcdefghijklmnop" ) )
                  .map( i -> CLiteral.of( i ) )
                  .forEach( i -> m_context.agent().beliefbase().add( i ) );
 
-        Assert.assertEquals( m_context.agent().beliefbase().size(), 100 );
-
+        Assert.assertEquals( 100, m_context.agent().beliefbase().size() );
 
         new CClearBeliefbase().execute(
             false, m_context,
@@ -263,9 +264,38 @@ public final class TestCActionAgent extends IBaseTest
             Collections.emptyList()
         );
 
-        Assert.assertEquals( m_context.agent().beliefbase().size(), 0 );
+        Assert.assertEquals( 0, m_context.agent().beliefbase().size() );
     }
 
+    /**
+     * test clear-beliefbase single call
+     */
+    @Test
+    public void clearbeliefbasepath()
+    {
+        m_context.agent()
+                 .beliefbase()
+                 .generate(
+                     ( p_name, p_view ) -> new CBeliefbase( new CMultiStorage<>() ).create( p_name, p_view ),
+                     CPath.of( "sub1" ),
+                     CPath.of( "sub2" )
+                 )
+                 .add(
+                     CLiteral.of( "sub1/test" ),
+                     CLiteral.of( "sub1/test", CRawTerm.of( 1 ) ),
+                     CLiteral.of( "sub1/test", CRawTerm.of( "foobar" ) ),
+                     CLiteral.of( "sub2/foobar" ) );
+
+        Assert.assertEquals( 4, m_context.agent().beliefbase().size() );
+
+        new CClearBeliefbase().execute(
+            false, m_context,
+            Stream.of( "sub1" ).map( CRawTerm::of ).collect( Collectors.toList() ),
+            Collections.emptyList()
+        );
+
+        Assert.assertEquals( 1, m_context.agent().beliefbase().size() );
+    }
 
     /**
      * test belieflist
@@ -287,8 +317,7 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-
-        Assert.assertEquals( l_return.size(), 1 );
+        Assert.assertEquals( 1, l_return.size() );
         Assert.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
 
         Assert.assertTrue(
@@ -328,6 +357,21 @@ public final class TestCActionAgent extends IBaseTest
         );
 
         Assert.assertTrue( m_context.agent().sleeping() );
+    }
+
+    /**
+     * test fuzzy-membership
+     */
+    @Test
+    public void fuzzymembership()
+    {
+        Assert.assertTrue(
+            new CFuzzyMembership().execute(
+                false, m_context,
+                Stream.of( 3, "hello" ).map( CRawTerm::of ).collect( Collectors.toList() ),
+                Collections.emptyList()
+            ).collect( Collectors.toList() ).isEmpty()
+        );
     }
 
     /**

@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 
 /**
  * action to pass data to the fuzzy-membership function.
- * The action passes any data to the agent fuzzy-membershop
+ * The action passes any data to the agent fuzzy-membership
  * function for any modification of the function
  *
  * {@code .agent/fuzzymembership(5, "hello");}
