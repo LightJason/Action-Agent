@@ -27,7 +27,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.lightjason.agentspeak.IBaseTest;
 import org.lightjason.agentspeak.beliefbase.CBeliefbase;
 import org.lightjason.agentspeak.beliefbase.storage.CMultiStorage;
 import org.lightjason.agentspeak.common.CPath;
@@ -44,6 +43,7 @@ import org.lightjason.agentspeak.language.execution.instantiable.plan.annotation
 import org.lightjason.agentspeak.language.execution.instantiable.plan.statistic.CPlanStatistic;
 import org.lightjason.agentspeak.language.execution.instantiable.plan.statistic.IPlanStatistic;
 import org.lightjason.agentspeak.language.execution.instantiable.plan.trigger.ITrigger;
+import org.lightjason.agentspeak.testing.IBaseTest;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
