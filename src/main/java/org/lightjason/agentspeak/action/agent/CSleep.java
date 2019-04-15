@@ -79,7 +79,7 @@ public final class CSleep extends IBaseAction
 
         );
 
-        return Stream.of();
+        return Stream.empty();
     }
 
 }

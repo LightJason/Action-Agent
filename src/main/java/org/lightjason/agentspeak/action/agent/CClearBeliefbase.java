@@ -77,7 +77,7 @@ public final class CClearBeliefbase extends IBaseAction
                               .map( i -> CPath.of( i.raw() ) )
                               .toArray( IPath[]::new ) );
 
-        return Stream.of();
+        return Stream.empty();
     }
 
 }

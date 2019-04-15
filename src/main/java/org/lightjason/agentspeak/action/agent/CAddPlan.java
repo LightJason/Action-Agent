@@ -82,6 +82,6 @@ public final class CAddPlan extends IBaseAction
                .map( CPlanStatistic::of )
                .forEach( i -> p_context.agent().plans().put( i.plan().trigger(), i ) );
 
-        return Stream.of();
+        return Stream.empty();
     }
 }

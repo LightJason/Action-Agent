@@ -90,7 +90,7 @@ public final class CGetPlan extends IBaseAction
     {
         return StreamUtils.windowed( CCommon.flatten( p_argument ), 2, 2 )
                           .allMatch( i -> CGetPlan.query( ITrigger.EType.of( i.get( 0 ).raw() ), i.get( 1 ), p_context.agent(), p_return ) )
-               ? Stream.of()
+               ? Stream.empty()
                : p_context.agent().fuzzy().membership().fail();
     }
 

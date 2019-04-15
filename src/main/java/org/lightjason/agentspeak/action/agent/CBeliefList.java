@@ -89,7 +89,7 @@ public final class CBeliefList extends IBaseAction
             )
         );
 
-        return Stream.of();
+        return Stream.empty();
     }
 
 }

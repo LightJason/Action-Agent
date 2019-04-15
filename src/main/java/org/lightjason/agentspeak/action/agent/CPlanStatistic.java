@@ -83,7 +83,7 @@ public final class CPlanStatistic extends IBaseAction
     )
     {
         return CCommon.flatten( p_argument ).allMatch( i -> CPlanStatistic.statistic( i.<IPlan>raw().trigger(), p_context.agent(), p_return ) )
-               ? Stream.of()
+               ? Stream.empty()
                : p_context.agent().fuzzy().membership().fail();
     }
 

@@ -88,6 +88,6 @@ public final class CPlanList extends IBaseAction
             )
         );
 
-        return Stream.of();
+        return Stream.empty();
     }
 }

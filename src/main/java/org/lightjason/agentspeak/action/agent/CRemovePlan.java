@@ -84,7 +84,7 @@ public final class CRemovePlan extends IBaseAction
     {
         return StreamUtils.windowed( CCommon.flatten( p_argument ), 2, 2 )
                           .allMatch( i -> CRemovePlan.remove( ITrigger.EType.of( i.get( 0 ).raw() ), i.get( 1 ), p_context ) )
-               ? Stream.of()
+               ? Stream.empty()
                : p_context.agent().fuzzy().membership().fail();
     }
 

@@ -72,7 +72,7 @@ public final class CCycleTime extends IBaseAction
                 System.nanoTime() - p_context.agent().cycletime()
             )
         );
-        return Stream.of();
+        return Stream.empty();
     }
 
 }
