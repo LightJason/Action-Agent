@@ -24,9 +24,9 @@
 package org.lightjason.agentspeak.action.agent;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.lightjason.agentspeak.beliefbase.CBeliefbase;
 import org.lightjason.agentspeak.beliefbase.storage.CMultiStorage;
 import org.lightjason.agentspeak.common.CPath;
@@ -81,7 +81,7 @@ public final class TestCActionAgent extends IBaseTest
      *
      * @throws Exception on initialize error
      */
-    @Before
+    @BeforeEach
     public void initialize() throws Exception
     {
         m_context = new CContext(
@@ -108,9 +108,9 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertEquals( l_return.size(), 1 );
-        Assert.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
-        Assert.assertEquals( l_return.get( 0 ).<List<?>>raw().size(), 0 );
+        Assertions.assertEquals( l_return.size(), 1 );
+        Assertions.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
+        Assertions.assertEquals( l_return.get( 0 ).<List<?>>raw().size(), 0 );
 
 
         m_context.agent().plans().put( l_plan.trigger(), CPlanStatistic.of( l_plan ) );
@@ -121,12 +121,12 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertEquals( l_return.size(), 2 );
-        Assert.assertTrue( l_return.get( 1 ).raw() instanceof List<?> );
-        Assert.assertEquals( l_return.get( 1 ).<List<?>>raw().size(), 1 );
-        Assert.assertTrue( l_return.get( 1 ).<List<?>>raw().get( 0 ) instanceof AbstractMap.Entry<?, ?> );
-        Assert.assertEquals( l_return.get( 1 ).<List<AbstractMap.Entry<String, ILiteral>>>raw().get( 0 ).getKey(), l_trigger.type().sequence() );
-        Assert.assertEquals( l_return.get( 1 ).<List<AbstractMap.Entry<String, ILiteral>>>raw().get( 0 ).getValue(), l_trigger.literal() );
+        Assertions.assertEquals( l_return.size(), 2 );
+        Assertions.assertTrue( l_return.get( 1 ).raw() instanceof List<?> );
+        Assertions.assertEquals( l_return.get( 1 ).<List<?>>raw().size(), 1 );
+        Assertions.assertTrue( l_return.get( 1 ).<List<?>>raw().get( 0 ) instanceof AbstractMap.Entry<?, ?> );
+        Assertions.assertEquals( l_return.get( 1 ).<List<AbstractMap.Entry<String, ILiteral>>>raw().get( 0 ).getKey(), l_trigger.type().sequence() );
+        Assertions.assertEquals( l_return.get( 1 ).<List<AbstractMap.Entry<String, ILiteral>>>raw().get( 0 ).getValue(), l_trigger.literal() );
     }
 
 
@@ -144,8 +144,8 @@ public final class TestCActionAgent extends IBaseTest
             Collections.emptyList()
         );
 
-        Assert.assertEquals( m_context.agent().plans().size(), 1 );
-        Assert.assertArrayEquals(
+        Assertions.assertEquals( m_context.agent().plans().size(), 1 );
+        Assertions.assertArrayEquals(
             m_context.agent().plans().values().stream().map( IPlanStatistic::plan ).toArray(),
             Stream.of( l_plan ).toArray()
         );
@@ -167,8 +167,8 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertEquals( l_return.size(), 1 );
-        Assert.assertTrue( l_return.get( 0 ).<Number>raw().longValue() > 0 );
+        Assertions.assertEquals( l_return.size(), 1 );
+        Assertions.assertTrue( l_return.get( 0 ).<Number>raw().longValue() > 0 );
     }
 
 
@@ -188,7 +188,7 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertTrue( l_return.isEmpty() );
+        Assertions.assertTrue( l_return.isEmpty() );
 
 
         m_context.agent().plans().put( l_plan.trigger(), CPlanStatistic.of( l_plan ) );
@@ -199,10 +199,10 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertEquals( 1, l_return.size() );
-        Assert.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
-        Assert.assertEquals( 1, l_return.get( 0 ).<List<?>>raw().size() );
-        Assert.assertArrayEquals( Stream.of( l_plan ).toArray(), l_return.get( 0 ).<List<?>>raw().toArray() );
+        Assertions.assertEquals( 1, l_return.size() );
+        Assertions.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
+        Assertions.assertEquals( 1, l_return.get( 0 ).<List<?>>raw().size() );
+        Assertions.assertArrayEquals( Stream.of( l_plan ).toArray(), l_return.get( 0 ).<List<?>>raw().toArray() );
     }
 
 
@@ -215,7 +215,7 @@ public final class TestCActionAgent extends IBaseTest
         final IPlan l_plan = new CEmptyPlan( ITrigger.EType.ADDGOAL.builddefault( CLiteral.of( "testremoveplan" ) ) );
         m_context.agent().plans().put( l_plan.trigger(), CPlanStatistic.of( l_plan ) );
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new CRemovePlan(),
                 false,
@@ -230,11 +230,12 @@ public final class TestCActionAgent extends IBaseTest
     /**
      * test remove plan error
      */
-    @Test( expected = UnsupportedOperationException.class )
+    @Test
     public void removeplanerror()
     {
-        Assert.assertFalse(
-            execute(
+        Assertions.assertThrows(
+            UnsupportedOperationException.class,
+            () -> execute(
                 new CRemovePlan(),
                 false,
                 Stream.of( "+!", "testremoveerrorplan" ).map( CRawTerm::of ).collect( Collectors.toList() ),
@@ -255,7 +256,7 @@ public final class TestCActionAgent extends IBaseTest
                  .map( i -> CLiteral.of( i ) )
                  .forEach( i -> m_context.agent().beliefbase().add( i ) );
 
-        Assert.assertEquals( 100, m_context.agent().beliefbase().size() );
+        Assertions.assertEquals( 100, m_context.agent().beliefbase().size() );
 
         new CClearBeliefbase().execute(
             false, m_context,
@@ -263,7 +264,7 @@ public final class TestCActionAgent extends IBaseTest
             Collections.emptyList()
         );
 
-        Assert.assertEquals( 0, m_context.agent().beliefbase().size() );
+        Assertions.assertEquals( 0, m_context.agent().beliefbase().size() );
     }
 
     /**
@@ -285,7 +286,7 @@ public final class TestCActionAgent extends IBaseTest
                      CLiteral.of( "sub1/test", CRawTerm.of( "foobar" ) ),
                      CLiteral.of( "sub2/foobar" ) );
 
-        Assert.assertEquals( 4, m_context.agent().beliefbase().size() );
+        Assertions.assertEquals( 4, m_context.agent().beliefbase().size() );
 
         new CClearBeliefbase().execute(
             false, m_context,
@@ -293,7 +294,7 @@ public final class TestCActionAgent extends IBaseTest
             Collections.emptyList()
         );
 
-        Assert.assertEquals( 1, m_context.agent().beliefbase().size() );
+        Assertions.assertEquals( 1, m_context.agent().beliefbase().size() );
     }
 
     /**
@@ -308,7 +309,7 @@ public final class TestCActionAgent extends IBaseTest
                                             .peek( i -> m_context.agent().beliefbase().add( CLiteral.of( i ) ) )
                                             .collect( Collectors.toSet() );
 
-        Assert.assertEquals( m_context.agent().beliefbase().size(), 100 );
+        Assertions.assertEquals( m_context.agent().beliefbase().size(), 100 );
 
         new CBeliefList().execute(
             false, m_context,
@@ -316,10 +317,10 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertEquals( 1, l_return.size() );
-        Assert.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
+        Assertions.assertEquals( 1, l_return.size() );
+        Assertions.assertTrue( l_return.get( 0 ).raw() instanceof List<?> );
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             l_return.get( 0 )
                     .<List<ILiteral>>raw()
                     .stream()
@@ -352,10 +353,10 @@ public final class TestCActionAgent extends IBaseTest
             l_return
         );
 
-        Assert.assertEquals( 1, l_return.size() );
-        Assert.assertEquals( 3, l_return.get( 0 ).<Collection<?>>raw().size() );
+        Assertions.assertEquals( 1, l_return.size() );
+        Assertions.assertEquals( 3, l_return.get( 0 ).<Collection<?>>raw().size() );
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             Stream.of(
                 CLiteral.of( l_names ),
                 CLiteral.of( l_names, CRawTerm.of( 1 ) ),
@@ -376,7 +377,7 @@ public final class TestCActionAgent extends IBaseTest
             Collections.emptyList()
         );
 
-        Assert.assertTrue( m_context.agent().sleeping() );
+        Assertions.assertTrue( m_context.agent().sleeping() );
     }
 
     /**
@@ -391,7 +392,7 @@ public final class TestCActionAgent extends IBaseTest
             Collections.emptyList()
         );
 
-        Assert.assertTrue( m_context.agent().sleeping() );
+        Assertions.assertTrue( m_context.agent().sleeping() );
     }
 
     /**
@@ -400,7 +401,7 @@ public final class TestCActionAgent extends IBaseTest
     @Test
     public void fuzzymembership()
     {
-        Assert.assertTrue(
+        Assertions.assertTrue(
             new CFuzzyMembership().execute(
                 false, m_context,
                 Stream.of( 3, "hello" ).map( CRawTerm::of ).collect( Collectors.toList() ),
@@ -420,7 +421,7 @@ public final class TestCActionAgent extends IBaseTest
 
         final List<ITerm> l_return = new ArrayList<>();
 
-        Assert.assertTrue(
+        Assertions.assertTrue(
             execute(
                 new org.lightjason.agentspeak.action.agent.CPlanStatistic(),
                 false,
@@ -430,8 +431,8 @@ public final class TestCActionAgent extends IBaseTest
             )
         );
 
-        Assert.assertEquals( 3, l_return.size() );
-        Assert.assertArrayEquals(
+        Assertions.assertEquals( 3, l_return.size() );
+        Assertions.assertArrayEquals(
             Stream.of( 0D, 0D, 0D ).toArray(),
             l_return.stream().map( i -> i.raw() ).toArray()
         );
@@ -443,32 +444,32 @@ public final class TestCActionAgent extends IBaseTest
     @Test
     public void namearguments()
     {
-        Assert.assertEquals( CPath.of( "agent/planstatistic" ), new org.lightjason.agentspeak.action.agent.CPlanStatistic().name() );
-        Assert.assertEquals( 1, new org.lightjason.agentspeak.action.agent.CPlanStatistic().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/planstatistic" ), new org.lightjason.agentspeak.action.agent.CPlanStatistic().name() );
+        Assertions.assertEquals( 1, new org.lightjason.agentspeak.action.agent.CPlanStatistic().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/belieflist" ), new CBeliefList().name() );
-        Assert.assertEquals( 0, new CBeliefList().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/belieflist" ), new CBeliefList().name() );
+        Assertions.assertEquals( 0, new CBeliefList().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/clearbeliefbase" ), new CClearBeliefbase().name() );
-        Assert.assertEquals( 0, new CClearBeliefbase().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/clearbeliefbase" ), new CClearBeliefbase().name() );
+        Assertions.assertEquals( 0, new CClearBeliefbase().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/cycletime" ), new CCycleTime().name() );
-        Assert.assertEquals( 0, new CClearBeliefbase().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/cycletime" ), new CCycleTime().name() );
+        Assertions.assertEquals( 0, new CClearBeliefbase().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/fuzzymembership" ), new CFuzzyMembership().name() );
-        Assert.assertEquals( 0, new CFuzzyMembership().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/fuzzymembership" ), new CFuzzyMembership().name() );
+        Assertions.assertEquals( 0, new CFuzzyMembership().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/getplan" ), new CGetPlan().name() );
-        Assert.assertEquals( 1, new CGetPlan().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/getplan" ), new CGetPlan().name() );
+        Assertions.assertEquals( 1, new CGetPlan().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/planlist" ), new CPlanList().name() );
-        Assert.assertEquals( 0, new CPlanList().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/planlist" ), new CPlanList().name() );
+        Assertions.assertEquals( 0, new CPlanList().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/removeplan" ), new CRemovePlan().name() );
-        Assert.assertEquals( 1, new CRemovePlan().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/removeplan" ), new CRemovePlan().name() );
+        Assertions.assertEquals( 1, new CRemovePlan().minimalArgumentNumber() );
 
-        Assert.assertEquals( CPath.of( "agent/sleep" ), new CSleep().name() );
-        Assert.assertEquals( 0, new CSleep().minimalArgumentNumber() );
+        Assertions.assertEquals( CPath.of( "agent/sleep" ), new CSleep().name() );
+        Assertions.assertEquals( 0, new CSleep().minimalArgumentNumber() );
     }
 
 
@@ -517,7 +518,6 @@ public final class TestCActionAgent extends IBaseTest
             return m_trigger;
         }
 
-        @Nonnull
         @Override
         public boolean condition( @Nonnull final IContext p_context )
         {
